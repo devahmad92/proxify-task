@@ -18,6 +18,11 @@ use Carbon\Carbon;
  */
 class Job extends BaseModel
 {
+    const NEW_STATUS = 'NEW';
+    const PROCESSING_STATUS = 'PROCESSING';
+    const DONE_STATUS = 'DONE';
+    const ERROR_STATUS = 'ERROR';
+
     /**
      * The attributes that are mass assignable.
      *
