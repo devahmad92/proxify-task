@@ -46,7 +46,6 @@ RUN composer install \
     --no-interaction \
     --no-scripts \
     --no-suggest \
-    --no-dev \
     --optimize-autoloader
 
 # Expose the port nginx is reachable on
