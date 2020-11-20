@@ -14,5 +14,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
+    $jobs = \App\Models\Job::get();
+    foreach ($jobs as $job){
+        dispatch((new \App\Jobs\UrlProcessingJob($job)));
+    }
     return view('welcome');
 });
