@@ -22,7 +22,7 @@ class JobFactory extends Factory
     public function definition()
     {
         return [
-            'url' => $this->faker->url,
+            'url' => $this->faker->domainName,
         ];
     }
 }
