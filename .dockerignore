@@ -3,9 +3,7 @@
 .gitignore
 .gitattributes
 .styleci.yml
-.env
 .env.backup
-.env.example
 .editorconfig
 .phpunit.result.cache
 stubs
