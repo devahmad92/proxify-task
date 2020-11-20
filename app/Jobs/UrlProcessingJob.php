@@ -36,18 +36,40 @@ class UrlProcessingJob implements ShouldQueue
      */
     public function handle()
     {
-        if (in_array($this->model->status, [Job::NEW_STATUS, Job::ERROR_STATUS])) {
-            $this->model->update(['status' => Job::PROCESSING_STATUS]);
+        if ($this->model->status != Job::DONE_STATUS) {
+            $this->updateJobStatus(Job::PROCESSING_STATUS);
+            $status = Job::ERROR_STATUS;
             try {
-                $result = Http::get($this->model->url);
-                $status = Job::DONE_STATUS;
-                if ($result->failed()) {
-                    $status = Job::ERROR_STATUS;
+                $response = Http::get($this->model->url);
+                if ($response->successful()) {
+                    $status = Job::DONE_STATUS;
                 }
-                $this->model->update(['status' => $status, 'http_code' => $result->status()]);
-            } catch (\Exception $e) {
-                $this->model->update(['status' => Job::ERROR_STATUS]);
+                $this->updateJobStatus($status, $response->status());
+            } catch (\Exception $exception) {
+                $this->updateJobStatus($status);
             }
         }
+    }
+
+    /**
+     * Update the job data.
+     *
+     * @param string $status
+     * @param int|null $httpCode
+     * @return void
+     */
+    private function updateJobStatus(string $status, int $httpCode = null)
+    {
+        $this->model->update(['status' => $status, 'http_code' => $httpCode]);
+    }
+
+    /**
+     * Handle a job failure.
+     *
+     * @return void
+     */
+    public function failed()
+    {
+        $this->model->update(['status' => Job::ERROR_STATUS]);
     }
 }
